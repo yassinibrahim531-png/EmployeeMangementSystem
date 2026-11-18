@@ -3,12 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package employeemanagementsystem;
-
+import java.io.Serializable;
 /**
  *
  * @author Lenovo
  */
-public class Department {
+public class Department implements Serializable{
     
     private int departmentId;
     private String departmentName;
@@ -34,6 +34,7 @@ public class Department {
         this.departmentName = departmentName;
     }
     
+    @Override
     public String toString()
     {
         return departmentName;

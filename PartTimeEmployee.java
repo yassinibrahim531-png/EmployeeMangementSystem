@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package employeemanagementsystem;
-
+import java.io.Serializable;
 /**
  *
  * @author Lenovo
@@ -35,11 +35,13 @@ public class PartTimeEmployee extends Employee{
         this.hoursWorkedPerMonth = hoursWorkedPerMonth;
     }
     
+    @Override
     public double calculateMonthlySalary() {
         return hourlyPaymentRate * hoursWorkedPerMonth;
     }
 
 
+    @Override
     public String getEmployeeType() {
         return "Part-Time";
     }

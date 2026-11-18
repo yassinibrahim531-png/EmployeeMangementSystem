@@ -14,7 +14,7 @@ public class DepartmentManager {
    
         private ArrayList<Department> departments;
 
-    public DepartmentManager(ArrayList<Department> departments) {
+    public DepartmentManager() {
         departments = new ArrayList<>();
     }
         
