@@ -3,6 +3,9 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
 package employeemanagementsystem.front;
+import employeemanagementsystem.Department;
+import employeemanagementsystem.DepartmentManager;
+import employeemanagementsystem.EmployeeManager;
 
 /**
  *
@@ -11,12 +14,22 @@ package employeemanagementsystem.front;
 public class DashboardFrame extends javax.swing.JFrame {
     
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DashboardFrame.class.getName());
-
+    private LoginFrame loginFrame;
+    private EmployeeManager employeeManager;
+    private DepartmentManager departmentManager;
     /**
      * Creates new form DashboardFrame
      */
-    public DashboardFrame() {
+    public DashboardFrame(LoginFrame loginFrame) {
         initComponents();
+        setLocationRelativeTo(null);
+        this.loginFrame = loginFrame;
+        this.employeeManager = new EmployeeManager();
+        this.departmentManager = new DepartmentManager();
+        departmentManager.addDepartment(new Department(1, "IT"));
+        departmentManager.addDepartment(new Department(2, "HR"));
+        departmentManager.addDepartment(new Department(3, "Finance"));
+
     }
 
     /**
@@ -35,7 +48,8 @@ public class DashboardFrame extends javax.swing.JFrame {
         add = new javax.swing.JButton();
         update = new javax.swing.JButton();
         delete = new javax.swing.JButton();
-        delete1 = new javax.swing.JButton();
+        logout = new javax.swing.JButton();
+        departmentbutton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -55,6 +69,7 @@ public class DashboardFrame extends javax.swing.JFrame {
 
         add.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         add.setText("Add Employee");
+        add.addActionListener(this::addActionPerformed);
 
         update.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         update.setText("Update Employee");
@@ -64,41 +79,40 @@ public class DashboardFrame extends javax.swing.JFrame {
         delete.setText("Delete Employee");
         delete.addActionListener(this::deleteActionPerformed);
 
-        delete1.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
-        delete1.setText("Logout");
-        delete1.addActionListener(this::delete1ActionPerformed);
+        logout.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        logout.setText("Logout");
+        logout.addActionListener(this::logoutActionPerformed);
+
+        departmentbutton.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
+        departmentbutton.setText("Department Management");
+        departmentbutton.addActionListener(this::departmentbuttonActionPerformed);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(delete, javax.swing.GroupLayout.PREFERRED_SIZE, 197, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(234, 234, 234)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(add, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(view, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(search, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, 196, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE)))))
+            .addGroup(layout.createSequentialGroup()
+                .addGap(234, 234, 234)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(delete, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(update, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(add, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(view, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(search, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(departmentbutton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addGap(209, 209, 209))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addGap(262, 262, 262))
+                        .addComponent(logout, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(276, 276, 276))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addComponent(jLabel2)
-                        .addGap(158, 158, 158))
+                        .addGap(181, 181, 181))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                        .addComponent(delete1, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(248, 248, 248))))
+                        .addComponent(jLabel1)
+                        .addGap(290, 290, 290))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -107,19 +121,21 @@ public class DashboardFrame extends javax.swing.JFrame {
                 .addComponent(jLabel2)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel1)
-                .addGap(46, 46, 46)
+                .addGap(37, 37, 37)
                 .addComponent(add)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
+                .addComponent(departmentbutton)
+                .addGap(18, 18, 18)
                 .addComponent(view)
-                .addGap(28, 28, 28)
+                .addGap(18, 18, 18)
                 .addComponent(search)
-                .addGap(26, 26, 26)
+                .addGap(18, 18, 18)
                 .addComponent(update)
-                .addGap(32, 32, 32)
+                .addGap(18, 18, 18)
                 .addComponent(delete)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 44, Short.MAX_VALUE)
-                .addComponent(delete1)
-                .addGap(42, 42, 42))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addComponent(logout)
+                .addGap(40, 40, 40))
         );
 
         pack();
@@ -141,9 +157,29 @@ public class DashboardFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_viewActionPerformed
 
-    private void delete1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_delete1ActionPerformed
+    private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_delete1ActionPerformed
+        
+    int choice = javax.swing.JOptionPane.showConfirmDialog(this,"Are you sure you want to logout?","Logout",javax.swing.JOptionPane.YES_NO_OPTION);
+    if (choice==javax.swing.JOptionPane.YES_OPTION) {
+        loginFrame.setVisible(true);
+        this.setVisible(false);
+       }
+    }//GEN-LAST:event_logoutActionPerformed
+
+    private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
+        // TODO add your handling code here:
+    AddEmployeeFrame addFrame = new AddEmployeeFrame(employeeManager,departmentManager);
+    addFrame.setLocationRelativeTo(this);
+    addFrame.setVisible(true);
+    }//GEN-LAST:event_addActionPerformed
+
+    private void departmentbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_departmentbuttonActionPerformed
+        // TODO add your handling code here:
+         DepartmentManagementFrame frame = new DepartmentManagementFrame(departmentManager);
+         frame.setLocationRelativeTo(this);
+         frame.setVisible(true);
+    }//GEN-LAST:event_departmentbuttonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -167,15 +203,15 @@ public class DashboardFrame extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(() -> new DashboardFrame().setVisible(true));
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add;
     private javax.swing.JButton delete;
-    private javax.swing.JButton delete1;
+    private javax.swing.JButton departmentbutton;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
+    private javax.swing.JButton logout;
     private javax.swing.JButton search;
     private javax.swing.JButton update;
     private javax.swing.JButton view;

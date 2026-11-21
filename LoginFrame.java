@@ -49,11 +49,14 @@ public class LoginFrame extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jLabel2.setText("Password :");
 
+        jTextField2.setText("admin");
         jTextField2.addActionListener(this::jTextField2ActionPerformed);
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jButton1.setText("Login");
         jButton1.addActionListener(this::jButton1ActionPerformed);
+
+        jPasswordField1.setText("admin123");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -106,7 +109,11 @@ public class LoginFrame extends javax.swing.JFrame {
           boolean success = loginManager.login(username, password);
           if (success) 
             {
-        JOptionPane.showMessageDialog(this,"Login Successful!");}
+        JOptionPane.showMessageDialog(this,"Login Successful!");
+            this.setVisible(false);
+            DashboardFrame dashboard = new DashboardFrame(this);
+            dashboard.setVisible(true);
+            }
          else {
 
         JOptionPane.showMessageDialog(this,"Invalid username or password!");
