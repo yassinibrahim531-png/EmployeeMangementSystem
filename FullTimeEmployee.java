@@ -3,7 +3,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
  */
 package employeemanagementsystem;
-import java.io.Serializable;
+
 /**
  *
  * @author Lenovo
@@ -36,12 +36,10 @@ public class FullTimeEmployee extends Employee{
     }
     
     
-    @Override
     public double calculateMonthlySalary() {
         return basicMonthlySalary+monthlyBonus;
     }
         
-    @Override
     public String getEmployeeType()
     {
         return "Full-Time";

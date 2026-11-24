@@ -3,12 +3,12 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Main.java to edit this template
  */
 package employeemanagementsystem;
-import java.io.Serializable;
+
 /**
  *
  * @author Lenovo
  */
-public abstract class Employee implements Serializable{
+public abstract class Employee{
 
     private int employeeId;
     private String fullName;
