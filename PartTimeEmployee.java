@@ -35,11 +35,13 @@ public class PartTimeEmployee extends Employee{
         this.hoursWorkedPerMonth = hoursWorkedPerMonth;
     }
     
+    @Override
     public double calculateMonthlySalary() {
         return hourlyPaymentRate * hoursWorkedPerMonth;
     }
 
 
+    @Override
     public String getEmployeeType() {
         return "Part-Time";
     }

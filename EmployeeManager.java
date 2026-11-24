@@ -35,7 +35,7 @@ public class EmployeeManager {
 }
   public List<Employee> getAllEmployees()
 {
-    return employees;
+    return new ArrayList<>(employees);
 }
   
   public boolean updateEmployee(int employeeId, Employee updatedEmployee)

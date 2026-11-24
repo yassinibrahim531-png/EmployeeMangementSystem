@@ -15,19 +15,23 @@ public class EmployeeValidator {
          return value!= null && !value.trim().isEmpty();
      }
      
-    public boolean isValidInteger(String value)
+   public boolean isValidInteger(String value)
+{
+    if(!isNotEmpty(value))
+        return false;
+
+    value = value.trim();
+
+    try
     {
-        if(!isNotEmpty(value))
-            return false;
-        value = value.trim();
-        for(int i=0;i<value.length();i++)
-        {
-            if(value.charAt(i) < '0' || value.charAt(i) > '9')
-                return false;
-        }
-        
+        Integer.parseInt(value);
         return true;
     }
+    catch(NumberFormatException e)
+    {
+        return false;
+    }
+}
     
     public boolean isValidAge(String age)
     {
@@ -62,7 +66,8 @@ public class EmployeeValidator {
             if((value.charAt(i) < '0' || value.charAt(i) > '9') && (value.charAt(i)!= '.'))
                 return false;
         }
-        return Double.parseDouble(value) >= 0;
+        double salary = Double.parseDouble(value);
+        return Double.isFinite(salary) && salary >= 0;
     }
     
     public boolean isValidEmployeeType(String type)
