@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package employeemanagementsystem.front;
+package Frontend;
 
 import employeemanagementsystem.Department;
 import employeemanagementsystem.DepartmentManager;
@@ -10,32 +10,39 @@ import employeemanagementsystem.EmployeeManager;
 import employeemanagementsystem.FullTimeEmployee;
 import employeemanagementsystem.PartTimeEmployee;
 import javax.swing.JOptionPane;
+import employeemanagementsystem.FileHandler;
+import java.io.FileNotFoundException;
 
 /**
  *
  * @author Lenovo
  */
 public class AddEmployeeFrame extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(AddEmployeeFrame.class.getName());
     private EmployeeManager employeeManager;
     private DepartmentManager departmentManager;
+    private DashboardFrame dashboardFrame;
+    private FileHandler fileHandler;
+
     /**
      * Creates new form AddEmployeeFrame
      */
-    public AddEmployeeFrame(EmployeeManager employeeManager,DepartmentManager departmentManager) {
+    public AddEmployeeFrame(EmployeeManager employeeManager, DepartmentManager departmentManager, DashboardFrame dashboardFrame) {
         initComponents();
-        
-        this.employeeManager=employeeManager;
+
+        this.employeeManager = employeeManager;
         this.departmentManager = departmentManager;
+        this.dashboardFrame = dashboardFrame;
+        this.fileHandler = new FileHandler();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
         departmentcombo.removeAllItems();
 
         for (Department department : departmentManager.getDepartments()) {
-        departmentcombo.addItem(department.getDepartmentName());
-}
-        setLocationRelativeTo(null);
-       
+            departmentcombo.addItem(department.getDepartmentName());
+        }
+
         jLabel10.setVisible(true);
         basicsalary.setVisible(true);
         jLabel9.setVisible(true);
@@ -44,7 +51,7 @@ public class AddEmployeeFrame extends javax.swing.JFrame {
         hourlyrate.setVisible(false);
         jLabel12.setVisible(false);
         hoursworked.setVisible(false);
-        
+
     }
 
     /**
@@ -295,26 +302,24 @@ public class AddEmployeeFrame extends javax.swing.JFrame {
     private void typecomboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_typecomboActionPerformed
         // TODO add your handling code here:
         String type = typecombo.getSelectedItem().toString();
-if (type.equals("Full-Time")) {
-        jLabel10.setVisible(true);
-        basicsalary.setVisible(true);
-        jLabel9.setVisible(true);
-        monthlybonus.setVisible(true);
-        jLabel11.setVisible(false);
-        hourlyrate.setVisible(false);
-        jLabel12.setVisible(false);
-        hoursworked.setVisible(false);
-        } 
-else if (type.equals("Part-Time")) 
-        {
-        jLabel10.setVisible(false);
-        basicsalary.setVisible(false);
-        jLabel9.setVisible(false);
-        monthlybonus.setVisible(false);
-        jLabel11.setVisible(true);
-        hourlyrate.setVisible(true);
-        jLabel12.setVisible(true);
-        hoursworked.setVisible(true);
+        if (type.equals("Full-Time")) {
+            jLabel10.setVisible(true);
+            basicsalary.setVisible(true);
+            jLabel9.setVisible(true);
+            monthlybonus.setVisible(true);
+            jLabel11.setVisible(false);
+            hourlyrate.setVisible(false);
+            jLabel12.setVisible(false);
+            hoursworked.setVisible(false);
+        } else if (type.equals("Part-Time")) {
+            jLabel10.setVisible(false);
+            basicsalary.setVisible(false);
+            jLabel9.setVisible(false);
+            monthlybonus.setVisible(false);
+            jLabel11.setVisible(true);
+            hourlyrate.setVisible(true);
+            jLabel12.setVisible(true);
+            hoursworked.setVisible(true);
         }
     }//GEN-LAST:event_typecomboActionPerformed
 
@@ -326,142 +331,150 @@ else if (type.equals("Part-Time"))
         // TODO add your handling code here:
         try {
 
-        int employeeId = Integer.parseInt(id.getText().trim());
+            int employeeId = Integer.parseInt(id.getText().trim());
 
-        String fullName = name.getText().trim();
+            String fullName = name.getText().trim();
 
-        int employeeAge = Integer.parseInt(age.getText().trim());
+            int employeeAge = Integer.parseInt(age.getText().trim());
 
-        String employeePosition = position.getText().trim();
+            String employeePosition = position.getText().trim();
 
-        String departmentName = departmentcombo.getSelectedItem().toString();
+            String departmentName = departmentcombo.getSelectedItem().toString();
 
-        Department selectedDepartment = null;
+            Department selectedDepartment = null;
 
-        for (Department department : departmentManager.getDepartments()) {
+            for (Department department : departmentManager.getDepartments()) {
 
-            if (department.getDepartmentName().equals(departmentName)) {
-                selectedDepartment = department;
-                break;
+                if (department.getDepartmentName().equals(departmentName)) {
+                    selectedDepartment = department;
+                    break;
+                }
             }
-        }
 
-
-        if (employeeId <= 0 || employeeAge <= 0) {
-            JOptionPane.showMessageDialog(this,
-                    "ID and Age must be positive numbers!");
-            return;
-        }
-
-        if (fullName.isEmpty() || employeePosition.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Please fill in all employee information!");
-            return;
-        }
-
-        if (selectedDepartment == null) {
-            JOptionPane.showMessageDialog(this,
-                    "Please select a department!");
-            return;
-        }
-
-        String employeeType = typecombo.getSelectedItem().toString();
-
-        if (employeeType.equals("Full-Time")) {
-
-            double basicSalary =
-                    Double.parseDouble(basicsalary.getText().trim());
-
-            double monthlyBonus =
-                    Double.parseDouble(monthlybonus.getText().trim());
-
-            if (basicSalary <= 0 || monthlyBonus < 0) {
-                JOptionPane.showMessageDialog(this,"Salary values cannot be negative!");
+            if (employeeId <= 0 || employeeAge <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "ID and Age must be positive numbers!");
                 return;
             }
 
-            FullTimeEmployee employee = new FullTimeEmployee(basicSalary,monthlyBonus,employeeId,fullName,selectedDepartment,employeeAge,employeePosition);
-
-            if (employeeManager.addEmployee(employee))
-            {
-
-                JOptionPane.showMessageDialog(this,"Full-Time Employee Added Successfully!");
-
-                clearFields();
-
-            } else 
-            {
-
-                JOptionPane.showMessageDialog(this,"Employee ID already exists!");
-
-            }
-
-        } else if (employeeType.equals("Part-Time")) {
-
-            double hourlyRate =
-                    Double.parseDouble(hourlyrate.getText().trim());
-
-            double hoursWorked =
-                    Double.parseDouble(hoursworked.getText().trim());
-
-            if (hourlyRate <= 0 || hoursWorked < 0) {
-                JOptionPane.showMessageDialog(this,"Hourly rate and hours cannot be negative!");
+            if (fullName.isEmpty() || employeePosition.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Please fill in all employee information!");
                 return;
             }
 
-            PartTimeEmployee employee = new PartTimeEmployee(
-                    hourlyRate,
-                    hoursWorked,
-                    employeeId,
-                    fullName,
-                    selectedDepartment,
-                    employeeAge,
-                    employeePosition
-            );
-
-            if (employeeManager.addEmployee(employee)) {
-
-                JOptionPane.showMessageDialog(this,"Part-Time Employee Added Successfully!");
-
-                clearFields();
-
-            } else {
-
-                JOptionPane.showMessageDialog(this,"Employee ID already exists!");
-
+            if (selectedDepartment == null) {
+                JOptionPane.showMessageDialog(this,
+                        "Please select a department!");
+                return;
             }
+
+            String employeeType = typecombo.getSelectedItem().toString();
+
+            if (employeeType.equals("Full-Time")) {
+
+                double basicSalary
+                        = Double.parseDouble(basicsalary.getText().trim());
+
+                double monthlyBonus
+                        = Double.parseDouble(monthlybonus.getText().trim());
+
+                if (basicSalary <= 0 || monthlyBonus < 0) {
+                    JOptionPane.showMessageDialog(this, "Salary values cannot be negative!");
+                    return;
+                }
+
+                FullTimeEmployee employee = new FullTimeEmployee(basicSalary, monthlyBonus, employeeId, fullName, selectedDepartment, employeeAge, employeePosition);
+
+                if (employeeManager.addEmployee(employee)) {
+
+                    try {
+                        fileHandler.saveEmployees(employeeManager.getAllEmployees());
+                    } catch (FileNotFoundException e) {
+                        JOptionPane.showMessageDialog(this, "Error saving employee.");
+                    }
+                    JOptionPane.showMessageDialog(this, "Full-Time Employee Added Successfully!");
+
+                    clearFields();
+
+                } else {
+
+                    JOptionPane.showMessageDialog(this, "Employee ID already exists!");
+
+                }
+
+            } else if (employeeType.equals("Part-Time")) {
+
+                double hourlyRate
+                        = Double.parseDouble(hourlyrate.getText().trim());
+
+                double hoursWorked
+                        = Double.parseDouble(hoursworked.getText().trim());
+
+                if (hourlyRate <= 0 || hoursWorked < 0) {
+                    JOptionPane.showMessageDialog(this, "Hourly rate and hours cannot be negative!");
+                    return;
+                }
+
+                PartTimeEmployee employee = new PartTimeEmployee(
+                        hourlyRate,
+                        hoursWorked,
+                        employeeId,
+                        fullName,
+                        selectedDepartment,
+                        employeeAge,
+                        employeePosition
+                );
+
+                if (employeeManager.addEmployee(employee)) {
+
+                    try {
+                        fileHandler.saveEmployees(employeeManager.getAllEmployees());
+                    } catch (FileNotFoundException e) {
+                        JOptionPane.showMessageDialog(this, "Error saving employee.");
+                    }
+                    JOptionPane.showMessageDialog(this, "Part-Time Employee Added Successfully!");
+
+                    clearFields();
+
+                } else {
+
+                    JOptionPane.showMessageDialog(this, "Employee ID already exists!");
+
+                }
+            }
+
+        } catch (NumberFormatException e) {
+
+            JOptionPane.showMessageDialog(this, "Please enter valid numeric values!");
+
         }
-
-    } catch (NumberFormatException e) {
-
-        JOptionPane.showMessageDialog(this,"Please enter valid numeric values!");
-
     }
-}
 
+    private void clearFields() {
 
-private void clearFields() {
+        id.setText("");
+        name.setText("");
+        age.setText("");
+        position.setText("");
 
-    id.setText("");
-    name.setText("");
-    age.setText("");
-    position.setText("");
+        basicsalary.setText("");
+        monthlybonus.setText("");
 
-    basicsalary.setText("");
-    monthlybonus.setText("");
+        hourlyrate.setText("");
+        hoursworked.setText("");
 
-    hourlyrate.setText("");
-    hoursworked.setText("");
-
-    typecombo.setSelectedIndex(0);
+        typecombo.setSelectedIndex(0);
 
     }//GEN-LAST:event_saveActionPerformed
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
-        // TODO add your handling code here:
         this.setVisible(false);
+        dashboardFrame.setVisible(true);
+        this.dispose();
+
     }//GEN-LAST:event_backActionPerformed
-    
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField age;

@@ -2,7 +2,7 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package employeemanagementsystem.front;
+package Frontend;
 import employeemanagementsystem.LoginManager;
 import javax.swing.JOptionPane;
 
@@ -19,7 +19,6 @@ public class LoginFrame extends javax.swing.JFrame {
      */
     public LoginFrame() {
         initComponents();
-        
         loginManager = new LoginManager();
 
         setTitle("Employee Management System - Login");
@@ -49,14 +48,11 @@ public class LoginFrame extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jLabel2.setText("Password :");
 
-        jTextField2.setText("admin");
         jTextField2.addActionListener(this::jTextField2ActionPerformed);
 
         jButton1.setFont(new java.awt.Font("Segoe UI", 0, 20)); // NOI18N
         jButton1.setText("Login");
         jButton1.addActionListener(this::jButton1ActionPerformed);
-
-        jPasswordField1.setText("admin123");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);

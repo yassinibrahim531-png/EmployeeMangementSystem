@@ -2,29 +2,41 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package employeemanagementsystem.front;
+package Frontend;
+
 import employeemanagementsystem.Department;
 import employeemanagementsystem.DepartmentManager;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import employeemanagementsystem.FileHandler;
+import java.io.FileNotFoundException;
+import employeemanagementsystem.EmployeeManager;
+import employeemanagementsystem.Employee;
 
 /**
  *
  * @author Lenovo
  */
 public class DepartmentManagementFrame extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DepartmentManagementFrame.class.getName());
     private DepartmentManager departmentManager;
+    private DashboardFrame dashboardFrame;
+    private FileHandler fileHandler;
+    private EmployeeManager employeeManager;
+
     /**
      * Creates new form DepartmentManagementFrame
      */
-    public DepartmentManagementFrame(DepartmentManager departmentManager) {
+    public DepartmentManagementFrame(DepartmentManager departmentManager, EmployeeManager employeeManager, DashboardFrame dashboardFrame) {
         initComponents();
-         this.departmentManager = departmentManager;
-         loadDepartments();
-         setLocationRelativeTo(null);
-         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
+        this.departmentManager = departmentManager;
+        this.dashboardFrame = dashboardFrame;
+        this.employeeManager = employeeManager;
+        this.fileHandler = new FileHandler();
+
+        loadDepartments();
+        setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
     }
 
     /**
@@ -175,138 +187,155 @@ public class DepartmentManagementFrame extends javax.swing.JFrame {
         // TODO add your handling code here:
         int selectedRow = departmentTable.getSelectedRow();
 
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this,
-                "Please select a department from the table!");
-        return;
-    }
-
-    try {
-
-        int id = Integer.parseInt(departmentTable.getValueAt(selectedRow, 0).toString());
-
-        String newName = departmentName.getText();
-
-        if (newName.isEmpty()) {
-            JOptionPane.showMessageDialog(this,"Please enter the new department name!");
+        if (selectedRow == -1) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select a department from the table!");
             return;
         }
 
-        if (departmentManager.updateDepartment(id, newName)) {
+        try {
 
-            JOptionPane.showMessageDialog(this,"Department Updated Successfully!");
+            int id = Integer.parseInt(departmentTable.getValueAt(selectedRow, 0).toString());
 
-            loadDepartments();
+            String newName = departmentName.getText();
 
-            departmentId.setText("");
-            departmentName.setText("");
+            if (newName.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Please enter the new department name!");
+                return;
+            }
 
-        } else {
+            if (departmentManager.updateDepartment(id, newName)) {
 
-            JOptionPane.showMessageDialog(this,"Department name already exists!");
+                try {
+                    fileHandler.saveDepartments(departmentManager.getDepartments());
+                } catch (FileNotFoundException e) {
+                    JOptionPane.showMessageDialog(this, "Error saving departments.");
+                }
+                JOptionPane.showMessageDialog(this, "Department Updated Successfully!");
+
+                loadDepartments();
+
+                departmentId.setText("");
+                departmentName.setText("");
+
+            } else {
+
+                JOptionPane.showMessageDialog(this, "Department name already exists!");
+            }
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(this, "An error occurred while updating department!");
         }
 
-    } catch (Exception e) {
-
-        JOptionPane.showMessageDialog(this,"An error occurred while updating department!");
-    }
-             
     }//GEN-LAST:event_jButton3ActionPerformed
-    
+
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
         // TODO add your handling code here:
         try {
 
-        int id = Integer.parseInt(departmentId.getText().trim());
+            int id = Integer.parseInt(departmentId.getText().trim());
 
-        String name = departmentName.getText().trim();
+            String name = departmentName.getText().trim();
 
-        if (id <= 0) {
+            if (id <= 0) {
+                JOptionPane.showMessageDialog(this,
+                        "Department ID must be positive!");
+                return;
+            }
+
+            if (name.isEmpty()) {
+                JOptionPane.showMessageDialog(this,
+                        "Please enter department name!");
+                return;
+            }
+
+            Department department = new Department(id, name);
+
+            if (departmentManager.addDepartment(department)) {
+
+                try {
+                    fileHandler.saveDepartments(departmentManager.getDepartments());
+                } catch (FileNotFoundException e) {
+                    JOptionPane.showMessageDialog(this, "Error saving departments.");
+                }
+                JOptionPane.showMessageDialog(this,
+                        "Department Added Successfully!");
+
+                loadDepartments();
+
+                departmentId.setText("");
+                departmentName.setText("");
+
+            } else {
+
+                JOptionPane.showMessageDialog(this,
+                        "Department ID or Name already exists!");
+            }
+
+        } catch (NumberFormatException e) {
+
             JOptionPane.showMessageDialog(this,
-                    "Department ID must be positive!");
-            return;
+                    "Please enter a valid Department ID!");
         }
-
-        if (name.isEmpty()) {
-            JOptionPane.showMessageDialog(this,
-                    "Please enter department name!");
-            return;
-        }
-
-        Department department = new Department(id, name);
-
-        if (departmentManager.addDepartment(department)) {
-
-            JOptionPane.showMessageDialog(this,
-                    "Department Added Successfully!");
-
-            loadDepartments();
-
-            departmentId.setText("");
-            departmentName.setText("");
-
-        } else {
-
-            JOptionPane.showMessageDialog(this,
-                    "Department ID or Name already exists!");
-        }
-
-    } catch (NumberFormatException e) {
-
-        JOptionPane.showMessageDialog(this,
-                "Please enter a valid Department ID!");
-    }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
         int selectedRow = departmentTable.getSelectedRow();
 
-    if (selectedRow == -1) {
-        JOptionPane.showMessageDialog(this,
-                "Please select a department!");
-        return;
-    }
-
-    int id = Integer.parseInt(
-            departmentTable.getValueAt(selectedRow, 0).toString());
-
-    int choice = JOptionPane.showConfirmDialog(this,
-            "Are you sure you want to delete this department?",
-            "Delete Department",
-            JOptionPane.YES_NO_OPTION);
-
-    if (choice == JOptionPane.YES_OPTION) {
-
-        if (departmentManager.removeDepartment(id)) {
-
+        if (selectedRow == -1) {
             JOptionPane.showMessageDialog(this,
-                    "Department Deleted Successfully!");
-
-            loadDepartments();
-
-            departmentId.setText("");
-            departmentName.setText("");
-
-        } else {
-
-            JOptionPane.showMessageDialog(this,
-                    "Department could not be deleted!");
+                    "Please select a department!");
+            return;
         }
-    }
+
+        int id = Integer.parseInt(
+                departmentTable.getValueAt(selectedRow, 0).toString());
+
+        int choice = JOptionPane.showConfirmDialog(this,
+                "Are you sure you want to delete this department?",
+                "Delete Department",
+                JOptionPane.YES_NO_OPTION);
+
+        if (choice == JOptionPane.YES_OPTION) {
+
+
+                if (departmentManager.removeDepartment(id)) {
+                    try {
+                        fileHandler.saveDepartments(departmentManager.getDepartments());
+                    } catch (FileNotFoundException e) {
+                        JOptionPane.showMessageDialog(this, "Error saving departments.");
+                    }
+
+                    JOptionPane.showMessageDialog(this,
+                            "Department Deleted Successfully!");
+
+                    loadDepartments();
+
+                    departmentId.setText("");
+                    departmentName.setText("");
+
+                } else {
+
+                    JOptionPane.showMessageDialog(this,
+                            "Department could not be deleted!");
+                }
+            }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
         // TODO add your handling code here:
-    departmentId.setText("");
-    departmentName.setText("");
+        departmentId.setText("");
+        departmentName.setText("");
 
-    departmentTable.clearSelection();
+        departmentTable.clearSelection();
     }//GEN-LAST:event_jButton4ActionPerformed
 
     private void backActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_backActionPerformed
-        // TODO add your handling code here:
         this.setVisible(false);
+        dashboardFrame.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_backActionPerformed
 
     /**
@@ -332,20 +361,21 @@ public class DepartmentManagementFrame extends javax.swing.JFrame {
 
         /* Create and display the form */
     }
+
     private void loadDepartments() {
 
-    DefaultTableModel model =(DefaultTableModel) departmentTable.getModel();
+        DefaultTableModel model = (DefaultTableModel) departmentTable.getModel();
 
-    model.setRowCount(0);
+        model.setRowCount(0);
 
-    for (Department department : departmentManager.getDepartments()) {
+        for (Department department : departmentManager.getDepartments()) {
 
-        model.addRow(new Object[]{
-            department.getDepartmentId(),
-            department.getDepartmentName()
-        });
+            model.addRow(new Object[]{
+                department.getDepartmentId(),
+                department.getDepartmentName()
+            });
+        }
     }
-}
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton back;

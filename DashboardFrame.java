@@ -2,21 +2,32 @@
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-package employeemanagementsystem.front;
+package Frontend;
+
 import employeemanagementsystem.Department;
 import employeemanagementsystem.DepartmentManager;
 import employeemanagementsystem.EmployeeManager;
+import employeemanagementsystem.EmployeeManager;
+import employeemanagementsystem.DepartmentManager;
+import employeemanagementsystem.FileHandler;
+import employeemanagementsystem.Employee;
+import employeemanagementsystem.Department;
+import java.util.List;
+import java.io.FileNotFoundException;
+import javax.swing.JOptionPane;
 
 /**
  *
  * @author Lenovo
  */
 public class DashboardFrame extends javax.swing.JFrame {
-    
+
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(DashboardFrame.class.getName());
     private LoginFrame loginFrame;
     private EmployeeManager employeeManager;
     private DepartmentManager departmentManager;
+    private FileHandler fileHandler;
+
     /**
      * Creates new form DashboardFrame
      */
@@ -26,10 +37,39 @@ public class DashboardFrame extends javax.swing.JFrame {
         this.loginFrame = loginFrame;
         this.employeeManager = new EmployeeManager();
         this.departmentManager = new DepartmentManager();
-        departmentManager.addDepartment(new Department(1, "IT"));
-        departmentManager.addDepartment(new Department(2, "HR"));
-        departmentManager.addDepartment(new Department(3, "Finance"));
+        this.fileHandler = new FileHandler();
 
+        try {
+            List<Department> departments = fileHandler.loadDepartments();
+
+            for (Department department : departments) {
+                departmentManager.addDepartment(department);
+            }
+
+            if (departments.isEmpty()) {
+                departmentManager.addDepartment(new Department(1, "IT"));
+                departmentManager.addDepartment(new Department(2, "Human Resources"));
+                departmentManager.addDepartment(new Department(3, "Finance"));
+                departmentManager.addDepartment(new Department(4, "Marketing"));
+                departmentManager.addDepartment(new Department(5, "Sales"));
+
+                fileHandler.saveDepartments(departmentManager.getDepartments());
+            }
+
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Error loading departments.");
+        }
+
+        try {
+            List<Employee> employees = fileHandler.loadEmployees(departmentManager);
+
+            for (Employee employee : employees) {
+                employeeManager.addEmployee(employee);
+            }
+
+        } catch (FileNotFoundException e) {
+            JOptionPane.showMessageDialog(this, "Error loading employees.");
+        }
     }
 
     /**
@@ -142,68 +182,80 @@ public class DashboardFrame extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void searchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchActionPerformed
-        // TODO add your handling code here:
+        SearchEmployeePanel panel = new SearchEmployeePanel(employeeManager, this);
+        javax.swing.JFrame frame = new javax.swing.JFrame("Search Employees");
+        frame.setContentPane(panel);
+        frame.pack();
+        frame.setVisible(true);
+        this.setVisible(false);
+
     }//GEN-LAST:event_searchActionPerformed
 
     private void updateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateActionPerformed
-        // TODO add your handling code here:
+        UpdateEmployeePanel panel = new UpdateEmployeePanel(employeeManager, departmentManager, this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Update Employee");
+        frame.setContentPane(panel);
+        frame.pack();
+        frame.setVisible(true);
+
+        this.setVisible(false);
+
+
     }//GEN-LAST:event_updateActionPerformed
 
     private void deleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_deleteActionPerformed
-        // TODO add your handling code here:
+        DeleteEmployeePanel panel = new DeleteEmployeePanel(employeeManager, this);
+
+        javax.swing.JFrame frame = new javax.swing.JFrame("Delete Employee");
+        frame.setContentPane(panel);
+        frame.pack();
+        frame.setVisible(true);
+
+        this.setVisible(false);
+
+
     }//GEN-LAST:event_deleteActionPerformed
 
     private void viewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_viewActionPerformed
-        // TODO add your handling code here:
+        ViewEmployeePanel panel = new ViewEmployeePanel(employeeManager, this);
+        javax.swing.JFrame frame = new javax.swing.JFrame("View Employees");
+        frame.setContentPane(panel);
+        frame.pack();
+        frame.setVisible(true);
+        this.setVisible(false);
+
     }//GEN-LAST:event_viewActionPerformed
 
     private void logoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_logoutActionPerformed
         // TODO add your handling code here:
-        
-    int choice = javax.swing.JOptionPane.showConfirmDialog(this,"Are you sure you want to logout?","Logout",javax.swing.JOptionPane.YES_NO_OPTION);
-    if (choice==javax.swing.JOptionPane.YES_OPTION) {
-        loginFrame.setVisible(true);
-        this.setVisible(false);
-       }
+
+        int choice = javax.swing.JOptionPane.showConfirmDialog(this, "Are you sure you want to logout?", "Logout", javax.swing.JOptionPane.YES_NO_OPTION);
+        if (choice == javax.swing.JOptionPane.YES_OPTION) {
+            loginFrame.setVisible(true);
+            this.setVisible(false);
+        }
     }//GEN-LAST:event_logoutActionPerformed
 
     private void addActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addActionPerformed
         // TODO add your handling code here:
-    AddEmployeeFrame addFrame = new AddEmployeeFrame(employeeManager,departmentManager);
-    addFrame.setLocationRelativeTo(this);
-    addFrame.setVisible(true);
+        AddEmployeeFrame addFrame = new AddEmployeeFrame(employeeManager, departmentManager, this);
+        addFrame.setLocationRelativeTo(this);
+        addFrame.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_addActionPerformed
 
     private void departmentbuttonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_departmentbuttonActionPerformed
         // TODO add your handling code here:
-         DepartmentManagementFrame frame = new DepartmentManagementFrame(departmentManager);
-         frame.setLocationRelativeTo(this);
-         frame.setVisible(true);
+        DepartmentManagementFrame frame = new DepartmentManagementFrame(departmentManager,employeeManager,this);
+        frame.setLocationRelativeTo(this);
+        frame.setVisible(true);
+        this.setVisible(false);
     }//GEN-LAST:event_departmentbuttonActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ReflectiveOperationException | javax.swing.UnsupportedLookAndFeelException ex) {
-            logger.log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton add;
